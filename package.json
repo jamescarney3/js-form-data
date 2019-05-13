@@ -1,0 +1,15 @@
+{
+  "name": "json-form-data",
+  "version": "1.0.0",
+  "description": "cross-browser compatible, straightforward implementation of the FormData interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.8.0"
+  }
+}
