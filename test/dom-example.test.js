@@ -1,5 +1,7 @@
 'use-strict';
 
+const $ = require('jquery');
+
 test('runs a test with jsdom virtual dom', () => {
   document.body.innerHTML = `
     <form id="test-form">
@@ -7,5 +9,5 @@ test('runs a test with jsdom virtual dom', () => {
     </form>
   `;
   
-  expect(true).toEqual(true);
+  expect($('#test-form')).not.toBeNull();
 });
