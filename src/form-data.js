@@ -9,8 +9,7 @@ export default class JSONFormData {
       if (node.tagName !== 'FORM') {
         throw new Error('JSONFormData constructor must be passed a form element');
       }
-      
-      this._data = {};
+      this._data = this._parseForm(node);
     }
     catch (e) {
       // istanbul ignore next
@@ -19,5 +18,16 @@ export default class JSONFormData {
         console.error(e);
       }
     }
+  }
+  
+  _parseForm(node) {
+    const data = {};
+    for (i = 0; i < node.elements.length; i++) {
+      if (node.elements[i].name) {
+        data[node.elements[i].name] = node.elements[i].value;
+      }
+    }
+    
+    return data;
   }
 }

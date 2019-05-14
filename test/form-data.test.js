@@ -26,9 +26,6 @@ if (process.env.NODE_ENV !== 'debug') {
 }
 
 
-
-
-
 test('instantiates with a form element as argument', () => {
   document.body.innerHTML = `
     <form id="test-form"><input type="text" name="test-input" /></form>
@@ -57,4 +54,29 @@ test('throws exception when passed non-form element as argument', () => {
   const formData = new JSONFormData($('#test-form')[0]);
   
   expect(errorSpy).toHaveBeenCalled();
+});
+
+
+test('parses key from input name attr', () => {
+  document.body.innerHTML = `
+    <form id="test-form"><input name="foo" /></form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  
+  expect(formData._data).toHaveProperty('foo');
+});
+
+
+test('parses k/v pair value from input name & value attr', () => {
+  document.body.innerHTML = `
+    <form id="test-form">
+      <input value="bar" name="foo" />
+    </form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  console.log(formData);
+  
+  expect(formData._data).toHaveProperty('foo', 'bar');
 });
