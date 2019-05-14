@@ -13,6 +13,8 @@ export default class JSONFormData {
       this._data = {};
     }
     catch (e) {
+      // istanbul ignore next
+      // this is test and debug environment specific behavior
       if (process.env.NODE_ENV === 'debug' || process.env.NODE_ENV === 'test') {
         console.error(e);
       }
