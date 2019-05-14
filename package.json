@@ -4,7 +4,7 @@
   "description": "cross-browser compatible, straightforward implementation of the FormData interface",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "test-debug": "NODE_ENV=debug jest --coverage"
   },
   "author": "",
