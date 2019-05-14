@@ -36,7 +36,7 @@ test('instantiates with a form element as argument', () => {
 });
 
 
-test('thows error when passed falsey argument', () => {
+test('thows exception when passed falsey argument', () => {
   
   const errorSpy = jest.spyOn(global.console, 'error');
   const formData = new JSONFormData();
@@ -68,7 +68,18 @@ test('parses key from input name attr', () => {
 });
 
 
-test('parses k/v pair value from input name & value attr', () => {
+test('does not parse key from input with no name attr', () => {
+  document.body.innerHTML = `
+    <form id="test-form"><input /></form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  
+  expect(formData._data).toEqual({});
+});
+
+
+test('parses k/v pair from input name & value attr', () => {
   document.body.innerHTML = `
     <form id="test-form">
       <input value="bar" name="foo" />
@@ -76,7 +87,73 @@ test('parses k/v pair value from input name & value attr', () => {
   `;
   
   const formData = new JSONFormData($('#test-form')[0]);
-  console.log(formData);
   
   expect(formData._data).toHaveProperty('foo', 'bar');
+});
+
+
+test('parses k/v pair from text input with text supplied', () => {
+  document.body.innerHTML = `
+    <form id="test-form">
+      <input id="test-input" type="text" value="" name="test-text-input" />
+    </form>
+  `;
+  
+  const input = $('#test-input')[0];
+  input.value = 'test-value';
+  const formData = new JSONFormData($('#test-form')[0]);
+  
+  expect(formData._data).toHaveProperty('test-text-input', 'test-value');
+});
+
+
+test('does not parse k/v pair from unchecked checkbox', () => {
+  document.body.innerHTML = `
+    <form id="test-form">
+      <input type="checkbox" name="test-checkbox-input" />
+    </form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  expect(formData._data).not.toHaveProperty('test-checkbox-input');
+});
+
+
+test('parses k/v pair from checked checkbox', () => {
+  document.body.innerHTML = `
+    <form id="test-form">
+      <input type="checkbox" name="test-checkbox-input" checked />
+    </form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  expect(formData._data).toHaveProperty('test-checkbox-input', 'on');
+});
+
+
+test('does not parse k/v pair from unchecked radio group', () => {
+  document.body.innerHTML = `
+    <form id="test-form">
+      <input type="radio" value="foo" name="test-radio-input" />
+      <input type="radio" value="bar" name="test-radio-input" />
+      <input type="radio" value="baz" name="test-radio-input" />
+    </form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  expect(formData._data).not.toHaveProperty('test-radio-input');
+});
+
+
+test('parses k/v pair from checked radio group', () => {
+  document.body.innerHTML = `
+    <form id="test-form">
+      <input type="radio" value="foo" name="test-radio-input" />
+      <input type="radio" value="bar" name="test-radio-input" />
+      <input type="radio" value="baz" name="test-radio-input" checked />
+    </form>
+  `;
+  
+  const formData = new JSONFormData($('#test-form')[0]);
+  expect(formData._data).toHaveProperty('test-radio-input', 'baz');
 });

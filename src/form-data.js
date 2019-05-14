@@ -23,11 +23,17 @@ export default class JSONFormData {
   _parseForm(node) {
     const data = {};
     for (i = 0; i < node.elements.length; i++) {
-      if (node.elements[i].name) {
-        data[node.elements[i].name] = node.elements[i].value;
+      const element = node.elements[i];
+      if (element.name) {
+        if (element.type === 'checkbox' || element.type === 'radio') {
+          if (!!element.checked) {
+            data[element.name] = element.value;
+          }
+        } else {
+          data[element.name] = element.value;
+        }
       }
     }
-    
     return data;
   }
 }
