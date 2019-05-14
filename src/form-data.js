@@ -24,11 +24,12 @@ export default class JSONFormData {
     const data = {};
     for (i = 0; i < node.elements.length; i++) {
       const element = node.elements[i];
-      if (element.name) {
+      
+      if (element.name && element.tagName !== 'FIELDSET') {
         if (element.type === 'checkbox' || element.type === 'radio') {
-          if (!!element.checked) {
-            data[element.name] = element.value;
-          }
+          if (!!element.checked) data[element.name] = element.value;
+        } else if (element.type === 'file') {
+          data[element.name] = element.files;
         } else {
           data[element.name] = element.value;
         }
@@ -37,3 +38,4 @@ export default class JSONFormData {
     return data;
   }
 }
+
