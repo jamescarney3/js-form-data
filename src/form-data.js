@@ -1,5 +1,8 @@
 
-import { has } from 'lodash';
+import { has, includes } from 'lodash';
+
+
+const LOGGING_ENVS = ['debug', 'test', 'dev'];
 
 
 export default class JSONFormData {
@@ -18,7 +21,7 @@ export default class JSONFormData {
       catch (e) {
         // istanbul ignore next
         // this is test and debug environment specific behavior
-        if (process.env.NODE_ENV === 'debug' || process.env.NODE_ENV === 'test') {
+        if (includes(LOGGING_ENVS, process.env.NODE_ENV)) {
           console.error(e);
         }
       }
@@ -26,18 +29,31 @@ export default class JSONFormData {
   }
   
   append(name, value, filename) {
-    if (!has(this._data, name)) {
-      this._data[name] = value;
+    try {
+      if (!value) {
+        throw new Error('JSONFormData#append requires 2 arguments, but only 1 present');
+      }
+      
+      if (value instanceof Blob) {
+        const cloneValue = value.slice();
+        
+        if (!!filename) {
+          cloneValue.name = filename;
+        }
+        
+        this._data[name] = cloneValue;
+      }
+      
+      else if (!has(this._data, name)) {
+        this._data[name] = value;
+      }
     }
-    
-    // if (value instanceof Blob) {
-    //   const reader = new FileReader();
-    //   reader.onload = function(e) {
-    //     const file = new File([e.target.result], filename);
-    //     this._data[name] = file;
-    //   }
-    //   reader.readAsDataUrl(value);
-    // }
+    catch (e) {
+      // istanbul ignore next
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) {
+        console.error(e);
+      }
+    }
   }
 }
 
