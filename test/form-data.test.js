@@ -36,13 +36,6 @@ test('instantiates with a form element as argument', () => {
 });
 
 
-test('thows exception when passed falsey argument', () => {
-  const errorSpy = jest.spyOn(global.console, 'error');
-  const formData = new JSONFormData();
-  expect(errorSpy).toHaveBeenCalled();
-});
-
-
 test('throws exception when passed non-form element as argument', () => {
   document.body.innerHTML = `<div id="test-form">I am not a form</div>`;
 
