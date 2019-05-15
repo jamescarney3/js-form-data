@@ -3,7 +3,7 @@ node_js:
 - '1'
 branches:
   only:
-  - dev
+  - travis-ci
 cache:
   directories:
   - node_modules
