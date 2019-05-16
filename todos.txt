@@ -14,6 +14,7 @@ x values
 --- UTIL ---
 #instance
 serialize
+generate
 
 
 #class
