@@ -11,6 +11,12 @@
     "prepare": "npm run build",
     "prepublishOnly": "yarn test"
   },
+  "keywords": [
+    "formdata",
+    "form",
+    "data",
+    "util"
+  ],
   "author": "James Carney",
   "license": "BSD",
   "dependencies": {
