@@ -1,24 +1,29 @@
 {
-  "name": "json-form-data",
+  "name": "js-form-data",
   "version": "1.0.0",
-  "description": "cross-browser compatible, straightforward implementation of the FormData interface",
-  "main": "index.js",
+  "description": "Plain-old-JS near-implementation of the FormData web API with analogue methods for browsers with limited support and ergonomic parsing & serialization functionality",
+  "main": "lib/index.js",
   "scripts": {
     "test": "jest --coverage",
     "test-debug": "NODE_ENV=debug jest --coverage",
-    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "build": "babel src -d lib",
+    "prepare": "npm run build",
+    "prepublishOnly": "yarn test"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "James Carney",
+  "license": "BSD",
   "dependencies": {
-    "jquery": "^3.4.1",
     "lodash": "^4.17.11"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "babel-jest": "^24.8.0",
+    "babel-preset-minify": "^0.5.0",
     "coveralls": "^3.0.3",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "jquery": "^3.4.1"
   }
 }
