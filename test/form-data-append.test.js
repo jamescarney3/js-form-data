@@ -30,7 +30,7 @@ test('appends k/v pair to _data instance variable', () => {
   const formData = new JSONFormData();
   
   formData.append('foo', 'bar');
-  expect(formData._data).toHaveProperty('foo', 'bar');
+  expect(formData._data).toHaveProperty('foo', ['bar']);
 });
 
 
@@ -42,13 +42,12 @@ test('throws exception when 2nd positional argument is not passed', () => {
   expect(errorSpy).toHaveBeenCalled();
 });
 
-
-test('does not append k/v pair when key already exists on _data instance variable', () => {
+test('updates existing k/v pair when key already exists on _data instance variable', () => {
   const formData = new JSONFormData();
-  
-  formData._data = { foo: 'bar' };
+
+  formData._data = { foo: ['bar'] };
   formData.append('foo', 'baz');
-  expect(formData._data).toHaveProperty('foo', 'bar');
+  expect(formData._data).toHaveProperty('foo', ['bar', 'baz']);
 });
 
 
@@ -57,15 +56,15 @@ test('appends k/v pair with provided filename when value arguement is a Blob', (
   
   const blob = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'application/json'});
   formData.append('blob', blob, 'test-blob');
-  expect(formData._data['blob']).toHaveProperty('name', 'test-blob');
+  expect(formData._data['blob'][0]).toHaveProperty('name', 'test-blob');
 });
 
 
 test('appends k/v pair without provided filename when value argument is not a Blob instance', () => {
   const formData = new JSONFormData();
   
-  formData.append('blob', 'not-a-blob', 'test-non-blob');
-  expect(formData._data['blob']).not.toHaveProperty('name', 'test-blob');
+  formData.append('test-key', 'not-a-blob', 'test-non-blob');
+  expect(formData._data['test-key'][0]).not.toHaveProperty('name', ['test-blob']);
 });
 
 
@@ -74,6 +73,6 @@ test('clones passed blob value arguments', () => {
   
   const blob = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'application/json'});
   formData.append('blob', blob);
-  expect(formData._data['blob']).not.toBe(blob);
-  expect(formData._data['blob'].size).toEqual(blob.size);
+  expect(formData._data['blob'][0]).not.toBe(blob);
+  expect(formData._data['blob'][0].size).toEqual(blob.size);
 })
