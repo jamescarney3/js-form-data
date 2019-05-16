@@ -41,11 +41,11 @@ export default class JSONFormData {
           cloneValue.name = filename;
         }
         
-        this._data[name] = cloneValue;
+        pushValue(this._data, name, cloneValue);
       }
       
-      else if (!has(this._data, name)) {
-        this._data[name] = value;
+      else {
+        pushValue(this._data, name, value); 
       }
     }
     catch (e) {
@@ -66,14 +66,23 @@ function parseForm(node) {
     
     if (element.name && element.tagName !== 'FIELDSET') {
       if (element.type === 'checkbox' || element.type === 'radio') {
-        if (!!element.checked) data[element.name] = element.value;
+        if (!!element.checked) pushValue(data, element.name, element.value)
       } else if (element.type === 'file') {
-        data[element.name] = element.files;
+        pushValue(data, element.name, element.files)
       } else {
-        data[element.name] = element.value;
+        pushValue(data, element.name, element.value)
       }
     }
   }
   return data;
+}
+
+function pushValue(data, name, value) {
+  if (!data[name]) {
+    data[name] = [value]
+  }
+  else {
+    data[name] = [...data[name], value]
+  }
 }
 

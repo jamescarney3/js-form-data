@@ -69,7 +69,7 @@ test('parses k/v pair from input name & value attr', () => {
   `;
 
   const formData = new JSONFormData($('#test-form')[0]);
-  expect(formData._data).toHaveProperty('foo', 'bar');
+  expect(formData._data).toHaveProperty('foo', ['bar']);
 });
 
 
@@ -83,7 +83,7 @@ test('parses k/v pair from text input with text supplied', () => {
   const input = $('#test-input')[0];
   input.value = 'test-value';
   const formData = new JSONFormData($('#test-form')[0]);
-  expect(formData._data).toHaveProperty('test-text-input', 'test-value');
+  expect(formData._data).toHaveProperty('test-text-input', ['test-value']);
 });
 
 
@@ -109,7 +109,7 @@ test('parses k/v pair from checked checkbox', () => {
   `;
 
   const formData = new JSONFormData($('#test-form')[0]);
-  expect(formData._data).toHaveProperty('test-checkbox-input', 'on');
+  expect(formData._data).toHaveProperty('test-checkbox-input', ['on']);
 });
 
 
@@ -137,7 +137,7 @@ test('parses k/v pair from checked radio group', () => {
   `;
 
   const formData = new JSONFormData($('#test-form')[0]);
-  expect(formData._data).toHaveProperty('test-radio-input', 'baz');
+  expect(formData._data).toHaveProperty('test-radio-input', ['baz']);
 });
 
 
@@ -147,7 +147,7 @@ test('parses k/v pair with FileList value from file input', () => {
   `;
 
   const formData = new JSONFormData($('#test-form')[0]);
-  expect(formData._data['test-input']).toBeInstanceOf(FileList);
+  expect(formData._data['test-input'][0]).toBeInstanceOf(FileList);
 });
 
 
