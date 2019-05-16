@@ -1,5 +1,5 @@
 
-import { has, includes } from 'lodash';
+import { has, head, includes, keys, last, map, toPairs, unset, values } from 'lodash';
 
 
 const LOGGING_ENVS = ['debug', 'test', 'dev'];
@@ -30,23 +30,15 @@ export default class JSONFormData {
   
   append(name, value, filename) {
     try {
-      if (!value) {
-        throw new Error('JSONFormData#append requires 2 arguments, but only 1 present');
-      }
+      if (!value) throw new Error('JSONFormData#append requires 2 arguments, but only 1 present');
       
       if (value instanceof Blob) {
         const cloneValue = value.slice();
-        
-        if (!!filename) {
-          cloneValue.name = filename;
-        }
-        
+        if (!!filename) cloneValue.name = filename;
         pushValue(this._data, name, cloneValue);
       }
       
-      else {
-        pushValue(this._data, name, value); 
-      }
+      else pushValue(this._data, name, value); 
     }
     catch (e) {
       // istanbul ignore next
@@ -54,6 +46,57 @@ export default class JSONFormData {
         console.error(e);
       }
     }
+  }
+  
+  entries() {
+    return map(toPairs(this._data), pair => [head(pair), head(last(pair))]);
+  }
+  
+  set(name, value, filename) {
+    try {
+      if (!value) throw new Error('JSONFormData#set requires 2 arguments, but only 1 present');
+      
+      if (value instanceof Blob) {
+        const cloneValue = value.slice();
+        if (!!filename) cloneValue.name = filename;
+        this._data[name] = [cloneValue];
+      }
+      
+      else this._data[name] = [value];
+    }
+    catch (e) {
+      // istanbul ignore next
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) {
+        console.error(e);
+      }
+    }
+  }
+  
+  delete(name) {
+    const target = this._data[name] || null;
+    this._data = unset(this._data, name);
+    return target;
+  }
+  
+  get(name) {
+    return head(this._data[name]) || null;
+  }
+  
+  getAll(name) {
+    return this._data[name] || [];
+  }
+  
+  has(name) {
+    if (!name) return null;
+    return has(this._data, name);
+  }
+  
+  keys() {
+    return keys(this._data);
+  }
+  
+  values() {
+    return map(values(this._data), head);
   }
 }
 
