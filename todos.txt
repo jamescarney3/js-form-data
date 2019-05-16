@@ -1,0 +1,3 @@
+- support multiple files from one input
+https://developer.mozilla.org/en-US/docs/Web/API/FormData/append
+
