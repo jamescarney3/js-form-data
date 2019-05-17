@@ -1,5 +1,5 @@
 
-import { has, head, includes, keys, last, map, toPairs, unset, values } from 'lodash';
+import { first, has, head, includes, keys, last, map, reduce, toPairs, unset, values } from 'lodash';
 
 
 const LOGGING_ENVS = ['debug', 'test', 'dev'];
@@ -15,7 +15,7 @@ export default class JSONFormData {
         if (node.tagName !== 'FORM') {
           throw new Error('JSONFormData constructor must be passed a form element');
         }
-        
+
         this._data = parseForm(node);
       }
       catch (e) {
@@ -27,18 +27,25 @@ export default class JSONFormData {
       }
     }
   }
-  
+
+  serialize() {
+    return reduce(this._data, (acc, v, k) => {
+      const value = v.length === 1 ? first(v) : v;
+      return { ...acc, [k]: value };
+    }, {});
+  }
+
   append(name, value, filename) {
     try {
       if (!value) throw new Error('JSONFormData#append requires 2 arguments, but only 1 present');
-      
+
       if (value instanceof Blob) {
         const cloneValue = value.slice();
         if (!!filename) cloneValue.name = filename;
         pushValue(this._data, name, cloneValue);
       }
-      
-      else pushValue(this._data, name, value); 
+
+      else pushValue(this._data, name, value);
     }
     catch (e) {
       // istanbul ignore next
@@ -47,21 +54,44 @@ export default class JSONFormData {
       }
     }
   }
-  
+
   entries() {
     return map(toPairs(this._data), pair => [head(pair), head(last(pair))]);
   }
-  
+
+  delete(name) {
+    const target = this._data[name] || null;
+    this._data = unset(this._data, name);
+    return target;
+  }
+
+  get(name) {
+    return head(this._data[name]) || null;
+  }
+
+  getAll(name) {
+    return this._data[name] || [];
+  }
+
+  has(name) {
+    if (!name) return null;
+    return has(this._data, name);
+  }
+
+  keys() {
+    return keys(this._data);
+  }
+
   set(name, value, filename) {
     try {
       if (!value) throw new Error('JSONFormData#set requires 2 arguments, but only 1 present');
-      
+
       if (value instanceof Blob) {
         const cloneValue = value.slice();
         if (!!filename) cloneValue.name = filename;
         this._data[name] = [cloneValue];
       }
-      
+
       else this._data[name] = [value];
     }
     catch (e) {
@@ -71,30 +101,7 @@ export default class JSONFormData {
       }
     }
   }
-  
-  delete(name) {
-    const target = this._data[name] || null;
-    this._data = unset(this._data, name);
-    return target;
-  }
-  
-  get(name) {
-    return head(this._data[name]) || null;
-  }
-  
-  getAll(name) {
-    return this._data[name] || [];
-  }
-  
-  has(name) {
-    if (!name) return null;
-    return has(this._data, name);
-  }
-  
-  keys() {
-    return keys(this._data);
-  }
-  
+
   values() {
     return map(values(this._data), head);
   }
@@ -106,7 +113,7 @@ function parseForm(node) {
 
   for (var i = 0; i < node.elements.length; i++) {
     const element = node.elements[i];
-    
+
     if (element.name && element.tagName !== 'FIELDSET') {
       if (element.type === 'checkbox' || element.type === 'radio') {
         if (!!element.checked) pushValue(data, element.name, element.value)
@@ -128,4 +135,3 @@ function pushValue(data, name, value) {
     data[name] = [...data[name], value]
   }
 }
-
