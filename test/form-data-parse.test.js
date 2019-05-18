@@ -47,9 +47,15 @@ test('sets new instance _data value from array argument object value as array', 
   expect(formData._data['foo'].constructor === Array).toBe(true);
 });
 
-test('throws error if constructor argument is not a plain object', () => {
+test('throws error if constructor argument is defined but not a plain object', () => {
   const errorSpy = jest.spyOn(global.console, 'error');
   const formData = JSONFormData.parse('foo');
 
   expect(errorSpy).toHaveBeenCalled();
+});
+
+test('returns a JSONFormData instance when no argument / undefined is passed', () => {
+  const formData = JSONFormData.parse();
+
+  expect(formData instanceof JSONFormData).toBe(true);
 });
