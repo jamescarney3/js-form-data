@@ -13,10 +13,9 @@ x values
 
 --- UTIL ---
 #instance
-serialize
-generate
+x serialize
+x generate
 
 
 #class
 parse
-
