@@ -1,5 +1,5 @@
 
-import { first, has, head, includes, keys, last, map, reduce, toPairs, unset, values } from 'lodash';
+import { first, forEach, has, head, includes, keys, last, map, reduce, toPairs, unset, values } from 'lodash';
 
 
 const LOGGING_ENVS = ['debug', 'test', 'dev'];
@@ -33,6 +33,17 @@ export default class JSONFormData {
       const value = v.length === 1 ? first(v) : v;
       return { ...acc, [k]: value };
     }, {});
+  }
+
+  generate() {
+    const formData = new FormData();
+    forEach(this._data, (v, k) => {
+      forEach(v, el => {
+        formData.append(k, el);
+      });
+    });
+
+    return formData;
   }
 
   append(name, value, filename) {
