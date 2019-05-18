@@ -28,6 +28,28 @@ export default class JSONFormData {
     }
   }
 
+  static parse(data = {}) {
+    try {
+      if (data.constructor !== Object) throw new Error('JSONFormData#parse must be passed a plain object');
+
+      const _data = reduce(data, (acc, v, k) => {
+        if (v.constructor === Array) acc[k] = v;
+        else acc[k] = [v];
+        return acc;
+      }, {});
+      const formData = new JSONFormData();
+      formData._data = _data;
+      return formData;
+    }
+    catch (e) {
+      // istanbul ignore next
+      // this is test and debug environment specific behavior
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) {
+        console.error(e);
+      }
+    }
+  }
+
   serialize() {
     return reduce(this._data, (acc, v, k) => {
       const value = v.length === 1 ? first(v) : v;
