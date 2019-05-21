@@ -2,7 +2,7 @@
 
 import $ from 'jquery';
 
-import JSONFormData from '../src/form-data';
+import JSFormData from '../src/form-data';
 
 
 if (process.env.NODE_ENV !== 'debug') {
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== 'debug') {
 test('instantiates with a form element as argument', () => {
   document.body.innerHTML = `<form id="test-form" />`;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData).not.toBeNull();
 });
 
@@ -40,7 +40,7 @@ test('throws exception when passed non-form element as argument', () => {
   document.body.innerHTML = `<div id="test-form">I am not a form</div>`;
 
   const errorSpy = jest.spyOn(global.console, 'error');
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(errorSpy).toHaveBeenCalled();
 });
 
@@ -48,7 +48,7 @@ test('throws exception when passed non-form element as argument', () => {
 test('parses key from input name attr', () => {
   document.body.innerHTML = `<form id="test-form"><input name="foo" /></form>`;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('foo');
 });
 
@@ -56,7 +56,7 @@ test('parses key from input name attr', () => {
 test('does not parse key from input with no name attr', () => {
   document.body.innerHTML = `<form id="test-form"><input /></form>`;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toEqual({});
 });
 
@@ -68,7 +68,7 @@ test('parses k/v pair from input name & value attr', () => {
     </form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('foo', ['bar']);
 });
 
@@ -82,7 +82,7 @@ test('parses k/v pair from text input with text supplied', () => {
 
   const input = $('#test-input')[0];
   input.value = 'test-value';
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('test-text-input', ['test-value']);
 });
 
@@ -96,7 +96,7 @@ test('does not parse k/v pair from unchecked checkbox', () => {
     </form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).not.toHaveProperty('test-checkbox-input');
 });
 
@@ -108,7 +108,7 @@ test('parses k/v pair from checked checkbox', () => {
     </form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('test-checkbox-input', ['on']);
 });
 
@@ -122,7 +122,7 @@ test('does not parse k/v pair from unchecked radio group', () => {
     </form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).not.toHaveProperty('test-radio-input');
 });
 
@@ -136,7 +136,7 @@ test('parses k/v pair from checked radio group', () => {
     </form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('test-radio-input', ['baz']);
 });
 
@@ -146,7 +146,7 @@ test('parses k/v pair with FileList value from file input', () => {
     <form id="test-form"><input type="file" name="test-input" /></form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data['test-input'][0]).toBeInstanceOf(FileList);
 });
 
@@ -162,7 +162,7 @@ test('parses input from a fieldset within the form', () => {
     </form>
   `;
 
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('foo');
 });
 
@@ -180,7 +180,7 @@ test('parses input from nested fieldsets within the form', () => {
     </form>
   `;
   
-  const formData = new JSONFormData($('#test-form')[0]);
+  const formData = new JSFormData($('#test-form')[0]);
   expect(formData._data).toHaveProperty('foo');
 });
 

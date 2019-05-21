@@ -1,6 +1,6 @@
 'use-strict';
 
-import JSONFormData from '../src/form-data';
+import JSFormData from '../src/form-data';
 
 
 if (process.env.NODE_ENV !== 'debug') {
@@ -23,39 +23,39 @@ if (process.env.NODE_ENV !== 'debug') {
   });
 }
 
-test('returns an instance of JSONFormData', () => {
-  const formData = JSONFormData.parse({});
+test('returns an instance of JSFormData', () => {
+  const formData = JSFormData.parse({});
 
-  expect(formData.constructor === JSONFormData).toBe(true);
+  expect(formData.constructor === JSFormData).toBe(true);
 });
 
 test('sets new instance _data k/v pairs from argument object k/v pairs', () => {
-  const formData = JSONFormData.parse({ foo: true });
+  const formData = JSFormData.parse({ foo: true });
 
   expect(formData._data['foo']).toEqual([true]);
 });
 
 test('sets new instance _data value from non-array argument object value as array', () => {
-  const formData = JSONFormData.parse({ foo: true });
+  const formData = JSFormData.parse({ foo: true });
 
   expect(formData._data['foo'].constructor === Array).toBe(true);
 });
 
 test('sets new instance _data value from array argument object value as array', () => {
-  const formData = JSONFormData.parse({ foo: [1, 2, 3] });
+  const formData = JSFormData.parse({ foo: [1, 2, 3] });
 
   expect(formData._data['foo'].constructor === Array).toBe(true);
 });
 
 test('throws error if constructor argument is defined but not a plain object', () => {
   const errorSpy = jest.spyOn(global.console, 'error');
-  const formData = JSONFormData.parse('foo');
+  const formData = JSFormData.parse('foo');
 
   expect(errorSpy).toHaveBeenCalled();
 });
 
-test('returns a JSONFormData instance when no argument / undefined is passed', () => {
-  const formData = JSONFormData.parse();
+test('returns a JSFormData instance when no argument / undefined is passed', () => {
+  const formData = JSFormData.parse();
 
-  expect(formData instanceof JSONFormData).toBe(true);
+  expect(formData instanceof JSFormData).toBe(true);
 });

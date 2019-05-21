@@ -5,7 +5,7 @@ import { first, forEach, has, head, includes, keys, last, map, reduce, toPairs, 
 const LOGGING_ENVS = ['debug', 'test', 'dev'];
 
 
-export default class JSONFormData {
+export default class JSFormData {
   constructor(node) {
     if (!node) {
       this._data = {};
@@ -13,7 +13,7 @@ export default class JSONFormData {
     else {
       try {
         if (node.tagName !== 'FORM') {
-          throw new Error('JSONFormData constructor must be passed a form element');
+          throw new Error('JSFormData constructor must be passed a form element');
         }
 
         this._data = parseForm(node);
@@ -30,14 +30,14 @@ export default class JSONFormData {
 
   static parse(data = {}) {
     try {
-      if (data.constructor !== Object) throw new Error('JSONFormData#parse must be passed a plain object');
+      if (data.constructor !== Object) throw new Error('JSFormData#parse must be passed a plain object');
 
       const _data = reduce(data, (acc, v, k) => {
         if (v.constructor === Array) acc[k] = v;
         else acc[k] = [v];
         return acc;
       }, {});
-      const formData = new JSONFormData();
+      const formData = new JSFormData();
       formData._data = _data;
       return formData;
     }
@@ -70,7 +70,7 @@ export default class JSONFormData {
 
   append(name, value, filename) {
     try {
-      if (!value) throw new Error('JSONFormData#append requires 2 arguments, but only 1 present');
+      if (!value) throw new Error('JSFormData#append requires 2 arguments, but only 1 present');
 
       if (value instanceof Blob) {
         const cloneValue = value.slice();
@@ -117,7 +117,7 @@ export default class JSONFormData {
 
   set(name, value, filename) {
     try {
-      if (!value) throw new Error('JSONFormData#set requires 2 arguments, but only 1 present');
+      if (!value) throw new Error('JSFormData#set requires 2 arguments, but only 1 present');
 
       if (value instanceof Blob) {
         const cloneValue = value.slice();
