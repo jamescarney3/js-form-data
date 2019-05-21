@@ -1,3 +1,3 @@
-var JSONFormData = require('./form-data');
+var JSFormData = require('./form-data');
 
-export default JSONFormData;
+export default JSFormData;
