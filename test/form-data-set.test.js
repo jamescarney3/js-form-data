@@ -1,6 +1,6 @@
 'use-strict';
 
-import JSONFormData from '../src/form-data';
+import JSFormData from '../src/form-data';
 
 
 if (process.env.NODE_ENV !== 'debug') {
@@ -25,7 +25,7 @@ if (process.env.NODE_ENV !== 'debug') {
 
 
 test('sets k/v pair to _data instance variable', () => {
-  const formData = new JSONFormData();
+  const formData = new JSFormData();
   
   formData.set('foo', 'bar');
   expect(formData._data).toHaveProperty('foo', ['bar']);
@@ -33,7 +33,7 @@ test('sets k/v pair to _data instance variable', () => {
 
 
 test('throws exception when 2nd positional argument is not passed', () => {
-  const formData = new JSONFormData();
+  const formData = new JSFormData();
   
   const errorSpy = jest.spyOn(global.console, 'error');
   formData.set('foo');
@@ -41,7 +41,7 @@ test('throws exception when 2nd positional argument is not passed', () => {
 });
 
 test('replaces existing k/v pair when key already exists on _data instance variable', () => {
-  const formData = new JSONFormData();
+  const formData = new JSFormData();
 
   formData._data = { foo: ['bar'] };
   formData.set('foo', 'baz');
@@ -50,7 +50,7 @@ test('replaces existing k/v pair when key already exists on _data instance varia
 
 
 test('sets k/v pair with provided filename when value arguement is a Blob', () => {
-  const formData = new JSONFormData();
+  const formData = new JSFormData();
   
   const blob = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'application/json'});
   formData.set('blob', blob, 'test-blob');
@@ -59,7 +59,7 @@ test('sets k/v pair with provided filename when value arguement is a Blob', () =
 
 
 test('sets k/v pair without provided filename when value argument is not a Blob instance', () => {
-  const formData = new JSONFormData();
+  const formData = new JSFormData();
   
   formData.set('test-key', 'not-a-blob', 'test-non-blob');
   expect(formData._data['test-key'][0]).not.toHaveProperty('name', ['test-blob']);
@@ -67,7 +67,7 @@ test('sets k/v pair without provided filename when value argument is not a Blob 
 
 
 test('clones passed blob value arguments', () => {
-  const formData = new JSONFormData();
+  const formData = new JSFormData();
   
   const blob = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'application/json'});
   formData.set('blob', blob);
