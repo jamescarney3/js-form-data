@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'debug') {
 }
 
 
-test('appends k/v pair to _data instance variable', () => {
+test('appends k/v pair from (<str>, <_>) args to _data instance variable', () => {
   const formData = new JSFormData();
   
   formData.append('foo', 'bar');
@@ -32,7 +32,10 @@ test('appends k/v pair to _data instance variable', () => {
 });
 
 
-test('throws exception when 2nd positional argument is not passed', () => {
+test.todo('appends k/v pair(s) from <obj> arg to _data instance variable');
+
+
+test('throws exception when 1st positional arg is not an object and 2nd positional arg is not passed', () => {
   const formData = new JSFormData();
   
   const errorSpy = jest.spyOn(global.console, 'error');
@@ -40,7 +43,8 @@ test('throws exception when 2nd positional argument is not passed', () => {
   expect(errorSpy).toHaveBeenCalled();
 });
 
-test('updates existing k/v pair when key already exists on _data instance variable', () => {
+
+test('updates existing k/v pair from (<str>, <_>) args when key already exists on _data instance variable', () => {
   const formData = new JSFormData();
 
   formData._data = { foo: ['bar'] };
@@ -49,7 +53,10 @@ test('updates existing k/v pair when key already exists on _data instance variab
 });
 
 
-test('appends k/v pair with provided filename when value arguement is a Blob', () => {
+test.todo('updates existing k/v pair(s) from <obj> arg when one+ key exists on _data instance variable');
+
+
+test('appends k/v pair from (<str>, <File>, <str>) args with filename when value is a Blob', () => {
   const formData = new JSFormData();
   
   const blob = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'application/json'});
@@ -58,7 +65,7 @@ test('appends k/v pair with provided filename when value arguement is a Blob', (
 });
 
 
-test('appends k/v pair without provided filename when value argument is not a Blob instance', () => {
+test('appends k/v pair without provided filename when value is not a Blob instance', () => {
   const formData = new JSFormData();
   
   formData.append('test-key', 'not-a-blob', 'test-non-blob');
@@ -66,7 +73,7 @@ test('appends k/v pair without provided filename when value argument is not a Bl
 });
 
 
-test('clones passed blob value arguments', () => {
+test('clones blob to add to _data instance variable', () => {
   const formData = new JSFormData();
   
   const blob = new Blob([JSON.stringify({ foo: 'bar' })], { type: 'application/json'});
