@@ -24,6 +24,20 @@ if (process.env.NODE_ENV !== 'debug') {
 }
 
 
+test('throws exception with unrecognized param signature passed', () => {
+  const formData = new JSFormData();  
+  const errorSpy = jest.spyOn(global.console, 'error');
+
+  // see method for valid param signatures
+  formData.append();
+  formData.append(['foo']);
+  formData.append(1);
+  formData.append(1, 'foo');
+  formData.append(true);
+  expect(errorSpy).toHaveBeenCalledTimes(5);
+});
+
+
 test('appends new k/v pair from (<str>, <_>) args to _data instance variable', () => {
   const formData = new JSFormData();
   
@@ -40,15 +54,6 @@ test('appends new k/v pair(s) from <obj> arg to _data instance variable', () => 
   formData.append({ baz: 'qux', quux: 'quuz' });
   expect(formData._data).toHaveProperty('baz', ['qux']);
   expect(formData._data).toHaveProperty('quux', ['quuz']);
-});
-
-
-test('throws exception when 1st positional arg is not an object and 2nd positional arg is not passed', () => {
-  const formData = new JSFormData();
-  
-  const errorSpy = jest.spyOn(global.console, 'error');
-  formData.append('foo');
-  expect(errorSpy).toHaveBeenCalled();
 });
 
 

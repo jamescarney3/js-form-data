@@ -1,5 +1,5 @@
 
-import { first, forEach, has, head, includes, keys, last, map, reduce, toPairs, unset, values } from 'lodash';
+import { first, every, forEach, has, head, includes, keys, last, map, nth, reduce, toPairs, unset, values } from 'lodash';
 
 
 const LOGGING_ENVS = ['debug', 'test', 'dev'];
@@ -68,23 +68,36 @@ export default class JSFormData {
     return formData;
   }
 
-  append(name, value, filename) {
+  append(...args) {
     try {
-      if (!value) throw new Error('JSFormData#append requires 2 arguments, but only 1 present');
-
-      if (value instanceof Blob) {
-        const cloneValue = value.slice();
-        if (!!filename) cloneValue.name = filename;
-        pushValue(this._data, name, cloneValue);
+      if (matchArgsToTypes(args, [String, Blob, 'any'])) {
+        const [name, value, filename] = args;
+        const clone = value.slice();
+        
+        if (!!filename) clone.name = filename;
+        pushValue(this._data, name, clone);
+      }
+      
+      else if (matchArgsToTypes(args, [String, 'any'])) {
+        const [name, value, filename] = args;
+        
+        pushValue(this._data, name, value);
       }
 
-      else pushValue(this._data, name, value);
+      else if (matchArgsToTypes(args, [Object])) {
+        const [obj] = args;
+        
+        mergeValue(this._data, obj);
+      }
+      
+      
+      else {
+        throw new Error('Invalid param types passed to JSFormData.append')
+      };
     }
     catch (e) {
       // istanbul ignore next
-      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) {
-        console.error(e);
-      }
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
     }
   }
 
@@ -167,4 +180,27 @@ function pushValue(data, name, value) {
   else {
     data[name] = [...data[name], value]
   }
+}
+
+function mergeValue(data, obj) {
+  forEach(toPairs(obj), pair => {
+    const [key, val] = pair;
+    
+    if (has(data, key)) data[key] = [...data[key], val];
+    else data[key] = [val];
+  });
+}
+
+// this might be more tightly opinionated than it needs to be, TBD
+function matchArgToType(arg, type) {
+  if (type === 'any') return true;
+  
+  // not currently applicable, but number primitives don't have constructors
+  // if (type === Number) return typeof arg === 'number' ? true : false;
+  
+  return arg.constructor === type;
+}
+
+function matchArgsToTypes(args, types) {
+  return every(types, (type, idx) => matchArgToType(args[idx], type));
 }
