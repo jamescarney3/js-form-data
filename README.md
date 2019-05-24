@@ -7,8 +7,8 @@ Plain-old-JS near-implementation of the [FormData][1] web API with analogue meth
 ### Constructor
 _Every class that instantiates has one!_
 
-**`JSFormData()`**  
-Creates a new `JSFormData` object.
+**`JSFormData`**  
+Creates a new `JSFormData` object from a `<form>` tag and its children.
 ```
 // in document body:
 //<form id="example">
@@ -18,6 +18,7 @@ Creates a new `JSFormData` object.
 //	<input name="bool" value="false" />
 //</form>
 
+// params: <form>
 const formData = new JSFormData(document.getElementById('example'));
 formData.serialize();
 // => { foo: 'bar', baz: 'qux', bool: [true, false] }
@@ -26,9 +27,10 @@ formData.serialize();
 ### Class Methods
 _The JSFormData class has one util method but it's an important one if you need an instance but don't have a DOM element to pass to the constructor_
 
-**`JSFormData::parse(<obj>)`**  
+**`JSFormData::parse`**  
 Creates a new `JSFormData` object from k/v pairs in a plain JS object argument.
 ```
+// params: <Object>
 const formData = JSFormData.parse({ foo: 'bar', baz: true, qux: [1, 2, 3] });
 formData.serialize();
 // => { foo: 'bar', baz: true, qux: [1, 2, 3] }
@@ -65,7 +67,7 @@ formData.serialize();
 **`JSFormData.delete`**  
 Deletes a k/v pair from a `JSFormData` internal data structure.
 ```
-params: <String>
+// params: <String>
 const formData = JSFormData.parse({ foo: 'bar', baz: 'qux'});
 formData.delete('foo');
 formData.serialize();
@@ -75,7 +77,7 @@ formData.serialize();
 **`JSFormData.entries`**  
 Returns an `Array` of 2-element `Array`s from k/v pairs in `JSFormData`'s internal data structure.
 ```
-params: none
+// params: none
 const formData = JSFormData.parse({ foo: 'bar', baz: ['qux', 'quux']});
 formData.serialize();
 // => [['foo', 'bar'], ['baz', ['qux', 'quux]]]
@@ -84,7 +86,7 @@ formData.serialize();
 **`JSFormData.get`**  
 Returns the first value associated with a given key in a `JSFormData` instance.
 ```
-params: <String>
+// params: <String>
 const formData = JSFormData.parse({ foo: 'bar', baz: [1, 2] });
 formData.get('foo');
 // => 'bar'
@@ -114,9 +116,10 @@ formData.has('qux');
 // => false
 ```
 
-**`JSFormData.keys()`**  
+**`JSFormData.keys`**  
 Returns an `Array` of all the keys in a `JSFormData` instance.
 ```
+// params: none
 const formData = JSFormData.parse({ foo: 'bar', baz: false, qux: [1, 2, 3] });
 formData.keys();
 // => ['foo', 'baz', 'qux']
@@ -131,9 +134,10 @@ formData.serialize();
  // => { foo: 'baz' }
 ```
 
-**`JSFormData.values()`**  
+**`JSFormData.values`**  
 Returns an `Array` of values in a `JSFormData` instance; `Array` elements are either single values associated 1:1 with a key, or the first of a set of values associated many:1 with a key.
 ```
+// params: none
 const formData = JSFormData.parse({ foo: 'bar', baz: false, qux: [1, 2, 3] });
 JSFormData.values();
 // => ['bar', false, 1]
