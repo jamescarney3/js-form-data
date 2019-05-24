@@ -24,6 +24,20 @@ if (process.env.NODE_ENV !== 'debug') {
 }
 
 
+test('throws exception with unrecognized param signature passed', () => {
+  const formData = new JSFormData();  
+  const errorSpy = jest.spyOn(global.console, 'error');
+
+  // see method for valid param signatures
+  formData.set();
+  formData.set(['foo']);
+  formData.set(1);
+  formData.set(1, 'foo');
+  formData.set(true);
+  expect(errorSpy).toHaveBeenCalledTimes(5);
+});
+
+
 test('sets k/v pair to _data instance variable', () => {
   const formData = new JSFormData();
   
@@ -73,4 +87,25 @@ test('clones passed blob value arguments', () => {
   formData.set('blob', blob);
   expect(formData._data['blob'][0]).not.toBe(blob);
   expect(formData._data['blob'][0].size).toEqual(blob.size);
+})
+
+
+test('sets new k/v pair(s) from <obj> arg to _data instance variable', () => {
+  const formData = new JSFormData();
+  
+  formData.set({ foo: 'bar' });
+  expect(formData._data).toHaveProperty('foo', ['bar']);
+  formData.set({ baz: 'qux', quux: 'quuz' });
+  expect(formData._data).toHaveProperty('baz', ['qux']);
+  expect(formData._data).toHaveProperty('quux', ['quuz']);
+});
+
+
+test('sets new value of k/v pair from obj arg where v is an <array> to _data instance variable as flat array', () => {
+  const formData = new JSFormData();
+  
+  formData.set({ foo: 'bar' });
+  expect(formData._data).toHaveProperty('foo', ['bar']);
+  formData.set({ foo: ['baz', 'qux'] });
+  expect(formData._data).toHaveProperty('foo', ['baz', 'qux']);
 })

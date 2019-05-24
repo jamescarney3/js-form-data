@@ -137,36 +137,70 @@ export default class JSFormData {
     }
   }
 
-  getAll(name) {
-    return this._data[name] || [];
+  getAll(key) {
+    try {
+      if (matchArgsToTypes([key], [String])) {
+        return this._data[key] || [];
+      }
+      else {
+        throw new Error('Invalid param types passed to JSFormData.getAll')
+      }
+    }
+    catch (e) {
+      // istanbul ignore next
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
+    }
   }
 
-  has(name) {
-    if (!name) return null;
-    return has(this._data, name);
+  has(key) {
+    try {
+      if (matchArgsToTypes([key], [String])) {
+        return has(this._data, key);
+      }
+      else {
+        throw new Error('Invalid param types passed to JSFormData.getAll')
+      }
+    }
+    catch (e) {
+      // istanbul ignore next
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
+    }
   }
 
   keys() {
     return keys(this._data);
   }
 
-  set(name, value, filename) {
+  set(...args) {
     try {
-      if (!value) throw new Error('JSFormData#set requires 2 arguments, but only 1 present');
-
-      if (value instanceof Blob) {
-        const cloneValue = value.slice();
-        if (!!filename) cloneValue.name = filename;
-        this._data[name] = [cloneValue];
+      if (matchArgsToTypes(args, [String, Blob, 'any'])) {
+        const [name, value, filename] = args;
+        const clone = value.slice();
+        
+        if (!!filename) clone.name = filename;
+        this._data[name] = [clone];
+      }
+      
+      else if (matchArgsToTypes(args, [String, 'any'])) {
+        const [name, value] = args;
+        
+        this._data[name] = [value];
       }
 
-      else this._data[name] = [value];
+      else if (matchArgsToTypes(args, [Object])) {
+        const [obj] = args;
+        
+        setValue(this._data, obj);
+      }
+      
+      
+      else {
+        throw new Error('Invalid param types passed to JSFormData.set')
+      };
     }
     catch (e) {
       // istanbul ignore next
-      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) {
-        console.error(e);
-      }
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
     }
   }
 
@@ -195,12 +229,14 @@ function parseForm(node) {
   return data;
 }
 
+
+// ----- UPDATERS -----
 function pushValue(data, name, value) {
   if (!data[name]) {
-    data[name] = [value]
+    data[name] = [value];
   }
   else {
-    data[name] = [...data[name], value]
+    data[name] = [...data[name], value];
   }
 }
 
@@ -213,6 +249,15 @@ function mergeValue(data, obj) {
   });
 }
 
+function setValue(data, obj) {
+  forEach(toPairs(obj), pair => {
+    const [key, val] = pair;
+    
+    data[key] = Array.isArray(val) ? val : [val];
+  });
+}
+
+// ----- RUNTIME TYPE CHECKING -----
 // this might be more tightly opinionated than it needs to be, TBD
 function matchArgToType(arg, type) {
   if (type === 'any') return true;
