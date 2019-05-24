@@ -62,9 +62,10 @@ formData.serialize();
 
 ```
 
-**`JSFormData.delete(<str>)`**  
+**`JSFormData.delete`**  
 Deletes a k/v pair from a `JSFormData` internal data structure.
 ```
+params: <String>
 const formData = JSFormData.parse({ foo: 'bar', baz: 'qux'});
 formData.delete('foo');
 formData.serialize();

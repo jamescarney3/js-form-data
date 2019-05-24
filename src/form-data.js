@@ -100,15 +100,27 @@ export default class JSFormData {
       if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
     }
   }
+  
+  delete(key) {
+    try {
+      if (matchArgsToTypes([key], [String])) {
+        const target = this._data[key] || null;
+        this._data = unset(this._data, key);
+        return target;
+      }
+      
+      else {
+        throw new Error('Invalid param types passed to JSFormData.delete')
+      }
+    }
+    catch (e) {
+      // istanbul ignore next
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
+    }
+  }
 
   entries() {
     return map(toPairs(this._data), pair => [head(pair), head(last(pair))]);
-  }
-
-  delete(name) {
-    const target = this._data[name] || null;
-    this._data = unset(this._data, name);
-    return target;
   }
 
   get(name) {
