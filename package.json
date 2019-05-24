@@ -1,6 +1,6 @@
 {
   "name": "js-form-data",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Plain-old-JS near-implementation of the FormData web API with analogue methods for browsers with limited support and ergonomic parsing & serialization functionality",
   "main": "lib/index.js",
   "scripts": {
