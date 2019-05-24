@@ -81,9 +81,10 @@ formData.serialize();
 // => [['foo', 'bar'], ['baz', ['qux', 'quux]]]
 ```
 
-**`JSFormData.get(<str>)`**  
+**`JSFormData.get`**  
 Returns the first value associated with a given key in a `JSFormData` instance.
 ```
+params: <String>
 const formData = JSFormData.parse({ foo: 'bar', baz: [1, 2] });
 formData.get('foo');
 // => 'bar'

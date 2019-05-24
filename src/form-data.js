@@ -122,10 +122,10 @@ export default class JSFormData {
     return map(toPairs(this._data), pair => [head(pair), head(last(pair))]);
   }
 
-  get(name) {
+  get(key) {
     try {
       if (matchArgsToTypes([key], [String])) {
-        return head(this._data[name]) || null;
+        return head(this._data[key]) || null;
       }
       else {
         throw new Error('Invalid param types passed to JSFormData.get')
