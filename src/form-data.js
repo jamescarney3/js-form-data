@@ -108,7 +108,6 @@ export default class JSFormData {
         this._data = unset(this._data, key);
         return target;
       }
-      
       else {
         throw new Error('Invalid param types passed to JSFormData.delete')
       }
@@ -124,7 +123,18 @@ export default class JSFormData {
   }
 
   get(name) {
-    return head(this._data[name]) || null;
+    try {
+      if (matchArgsToTypes([key], [String])) {
+        return head(this._data[name]) || null;
+      }
+      else {
+        throw new Error('Invalid param types passed to JSFormData.get')
+      }
+    }
+    catch (e) {
+      // istanbul ignore next
+      if (includes(LOGGING_ENVS, process.env.NODE_ENV)) console.error(e);
+    }
   }
 
   getAll(name) {
