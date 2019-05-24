@@ -37,15 +37,29 @@ formData.serialize();
 ### Instance Methods
 _JSFormData instance methods are analogues of the regular FormData web API instance methods, modified to accept and return friendlier objects for easier integration with other processing logic_
 
-**`JSFormData.append(<str>, <_>)`**  
+**`JSFormData.append`**   
 Appends a new value onto an existing key in a `JSFormData` internal data structure, or adds the key and value if it does not already exist.
 ```
+// params: <String>, <_>
 const formData = new JSFormData();
 formData.append('foo', 'bar');
 formData.append('foo', 'baz');
 formData.append('qux', true);
 formData.serialize();
-// => { foo: ['bar', 'baz'], qux: true };
+// => { foo: ['bar', 'baz'], qux: true }
+
+// params: <String>, <Blob>, <String>
+const formData = new JSFormData();
+formData.append('blob', new Blob(), 'blob-name');
+formData.serialize().blob.name;
+=> 'blob-name'
+
+// params: <Obj>
+const formData = new JSFormData();
+formData.append({ foo: 'bar' });
+formData.serialize();
+// => { foo: ['bar'] }
+
 ```
 
 **`JSFormData.delete(<str>)`**  
