@@ -56,7 +56,7 @@ formData.append('blob', new Blob(), 'blob-name');
 formData.serialize().blob.name;
 => 'blob-name'
 
-// params: <Obj>
+// params: <Object>
 const formData = new JSFormData();
 formData.append({ foo: 'bar' });
 formData.serialize();
@@ -94,9 +94,10 @@ formData.get('baz');
 // => 1
 ```
 
-**`JSFormData.getAll(<str>)`**  
+**`JSFormData.getAll`**  
 Returns an `Array` of all values associated with a given key in a `JSFormData` instance.
 ```
+params: <String>
 const formData = JSFormData.parse({ foo: 'bar', baz: [1, 2] });
 formData.getAll('foo');
 // => ['bar']
@@ -104,9 +105,10 @@ formData.getAll('baz');
 // => [1, 2]
 ```
 
-**`JSFormData.has(<str>)`**  
+**`JSFormData.has`**  
 Returns a boolean indicating whether a `JSFormData` instance contains a given key.
 ```
+params: <String>
 const formData = JSFormData.parse({ foo: 'bar', baz: false });
 formData.has('foo');
 // => true
@@ -126,12 +128,27 @@ formData.keys();
 ```
 
 **`JSFormData.set(<str>, <_>)`**  
-Sets a new value for an existing key in a `JSFormData` instance, or adds a k/v pair if the given key does not already exist.
+Sets a new value for an existing key in a `JSFormData` instance, or adds a k/v pair if the given key does not already exist. Similar to append, but replaces any existing values on specified keys.
 ```
+params: <String>, <_>
 const formData = JSFormData({ foo: 'bar' });
 formData.set('foo', 'baz');
 formData.serialize();
  // => { foo: 'baz' }
+ 
+ // params: <String>, <Blob>, <String>
+ const formData = new JSFormData();
+ formData.set('blob', 'test-value');
+ formData.set('blob', new Blob(), 'blob-name');
+ formData.serialize().blob.name;
+ => 'blob-name'
+ 
+ // params: <Object>
+ const formData = new JSFormData();
+ formData.set({ foo: 'bar' });
+ formData.set({ foo: 'baz' });
+ formData.serialize();
+ // => { foo: ['baz'] }
 ```
 
 **`JSFormData.values`**  
