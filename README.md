@@ -72,9 +72,10 @@ formData.serialize();
 // => { baz: 'qux' }
 ```
 
-**`JSFormData.entries()`**  
+**`JSFormData.entries`**  
 Returns an `Array` of 2-element `Array`s from k/v pairs in `JSFormData`'s internal data structure.
 ```
+params: none
 const formData = JSFormData.parse({ foo: 'bar', baz: ['qux', 'quux']});
 formData.serialize();
 // => [['foo', 'bar'], ['baz', ['qux', 'quux]]]
