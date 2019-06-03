@@ -54,7 +54,7 @@ formData.serialize();
 const formData = new JSFormData();
 formData.append('blob', new Blob(), 'blob-name');
 formData.serialize().blob.name;
-=> 'blob-name'
+// => 'blob-name'
 
 // params: <Object>
 const formData = new JSFormData();
@@ -141,7 +141,7 @@ formData.serialize();
  formData.set('blob', 'test-value');
  formData.set('blob', new Blob(), 'blob-name');
  formData.serialize().blob.name;
- => 'blob-name'
+ // => 'blob-name'
  
  // params: <Object>
  const formData = new JSFormData();
